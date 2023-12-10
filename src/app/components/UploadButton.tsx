@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DialogContent } from "@/components/ui/dialog";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { Progress } from "@/components/ui/progress"
-import { Cloud, File } from "lucide-react";
+import { Cloud, File, Loader2 } from "lucide-react";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
 import { useUploadThing } from "../lib/uploadThing";
@@ -13,7 +13,7 @@ import { trpc } from "@/app/_trpc/client";
 import { useRouter } from "next/navigation";
 const UploadDropzone = () => {
   const router = useRouter();
-  const [isUploading, setIsUploading] = useState<boolean | null>(true);
+  const [isUploading, setIsUploading] = useState<boolean | null>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const { startUpload } = useUploadThing("pdfUploader")
   const { toast } = useToast()
@@ -92,7 +92,17 @@ const UploadDropzone = () => {
             ): null}
             {isUploading ? (
             <div className="w-full mt-4 max-w-xs mx-auto">
-              <Progress value={uploadProgress} className="h-1 w-full bg-zinc-200"/>
+              <Progress value={uploadProgress} className="h-1 w-full bg-zinc-200" indicatorColor={
+                uploadProgress === 100 ? 'bg-green-500': ''
+              }/>
+              {uploadProgress === 100 ? (
+                <div className="flex gap-1 items-center justify-center text-sm text-zinc-7000 text-center">
+                  <Loader2 className="h-3 w-3 animate-spin"/>
+                  Redirecting...
+                </div>
+              ): null
+
+              }
             </div>) : null}
             <input {...getInputProps()} type="file" id='dropzone-file' className="hidden" />
           </label>
