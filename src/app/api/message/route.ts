@@ -31,6 +31,25 @@ export const POST = async (req: NextRequest) => {
     }
   })
 
-  // 
+  // Simulare results
+
+  const results = "Test"
+
+  const prevMessages = await db.message.findMany({
+    where: {
+      fileId
+    },
+    orderBy: {
+      createdAt: "asc"
+    },
+    take: 6
+  })
+
+  const formattedMessages = prevMessages.map((msg) => ({
+    role: msg.isUserMessage ? "user" as const : "assistant" as const,
+    content: msg.text
+  }))
+  
+  // const response = 
 
 }
